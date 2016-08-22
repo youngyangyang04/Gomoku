@@ -5,17 +5,38 @@
 > Created Time: Sat Aug 20 20:25:49 2016
  ************************************************************************/
 
-#include<5ziqi.h>
-#include<my_socket.h>
+#include"gomoku.h"
+#include"my_socket.h"
 #define IP "127.0.0.1"
 #define PORT 8888
+void gomoku_show(char gomoku[][10]){
+	int i,j;
+	for(i=0;i<N;i++){
+		for(j=0;j<N;j++){
+			printf("%c ",gomoku[i][j]);
+		}
+		printf("\n");
+	}
+}
+void gomoku_init(char gomoku[][10]){
+	int i,j;
+	for(i=0;i<N;i++){
+		for(j=0;j<N;j++){
+			gomoku[i][j]='_';
+//			printf("%c %d %d\n",gomoku[i][j],i,j);
+		}
+	}
+	for(i=0;i<N;i++)
+		gomoku[0][i]=gomoku[i][0]=(i+'0');
+	
+}
 int checkFive1(int x,int y,char gomoku[N][N]);
 int main(){
 	int msg[2];
 	char gomoku[N][N];
 	SA client_addr;
 	int fd_socket,fd_client;
-	my_socketSer(&fd_socket,MY_TCP,IP,PROT);
+	my_socketSer(&fd_socket,MY_TCP,IP,PORT);
 	my_listen(fd_socket,5);
 	int sendlen=0,recvlen=0,len=0;
 	int i,j,x,y;
@@ -32,7 +53,7 @@ int main(){
 loop:
 		printf("server 请下棋:\n");
 		scanf("%d %d",&x,&y);
-	    if(gomoku[x][y]=='_'){
+	    if(gomoku[x][y]!='_'){
 			printf("这个位置已经有棋子了\n");
 			goto loop;
 		}
@@ -42,7 +63,7 @@ loop:
 		}
 		gomoku[x][y]='*';
 		gomoku_show(gomoku);
-		if(checkFive1(x,y,gomoku)){
+		if(checkWin(x,y,gomoku,'*')){
 			printf("server win\n");
 			break;
 		}

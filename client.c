@@ -9,6 +9,26 @@
 #include<my_socket.h>
 #define IP "127.0.0.1"
 #define PORT 8888
+void gomoku_show(char gomoku[][10]){
+	int i,j;
+	for(i=0;i<N;i++){
+		for(j=0;j<N;j++){
+			printf("%c ",gomoku[i][j]);
+		}
+		printf("\n");
+	}
+}
+void gomoku_init(char gomoku[][10]){
+	int i,j;
+	for(i=0;i<N;i++){
+		for(j=0;j<N;j++){
+			gomoku[i][j]='_';
+		}
+	}
+	for(i=0;i<N;i++)
+		gomoku[0][i]=gomoku[i][0]=(i+'0');
+	
+}
 int checkFive2(int x,int y,char gomoku[N][N]);
 int main(){
 	char gomoku[N][N];
@@ -34,7 +54,7 @@ loop:
 		}
 		gomoku[x][y]='0';
 		gomoku_show(gomoku);
-		if(checkFive2(x,y,gomoku)){
+		if(checkWin(x,y,gomoku,'0')){
 			printf("client win\n");
 			break;
 		}

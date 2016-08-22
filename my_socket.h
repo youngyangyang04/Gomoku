@@ -33,4 +33,5 @@ void my_recv(int* recvlen,int fd_socket,int *msg, int len);//tcp
 void my_sendto(int* send_num,int fd_socket,int *msg,int len,pSA server_addr,int addrlen);//udp中使用
 void my_recvfrom(int* recv_num,int fd_socket,int* msg,int len,pSA client_addr,int *addrlen);//udp中使用
 void my_close(int fd_socket);//tcp/udp 关掉描述符
+#endif
 
