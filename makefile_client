@@ -1,0 +1,2 @@
+client:*c *.h
+	gcc client.c checkWin.c my_socket.c -o ./bin/client -I ./
