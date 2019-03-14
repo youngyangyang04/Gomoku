@@ -64,7 +64,7 @@ loop:
 		gomoku[x][y]='*';
 		gomoku_show(gomoku);
 		if(checkWin(x,y,gomoku,'*')){
-			printf("server win\n");
+			printf("server win 1\n");
 			break;
 		}
 		msg[0]=x;
