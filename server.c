@@ -9,7 +9,7 @@
 #include"my_socket.h"
 #define IP "127.0.0.1"
 #define PORT 8888
-void gomoku_show(char gomoku[][10]){
+void gomoku_show(char gomoku[][26]){
 	int i,j;
 	for(i=0;i<N;i++){
 		for(j=0;j<N;j++){
@@ -18,21 +18,21 @@ void gomoku_show(char gomoku[][10]){
 		printf("\n");
 	}
 }
-void gomoku_init(char gomoku[][10]){
+void gomoku_init(char gomoku[][26]){
 	int i,j;
 	for(i=0;i<N;i++){
 		for(j=0;j<N;j++){
 			gomoku[i][j]='_';
-//			printf("%c %d %d\n",gomoku[i][j],i,j);
-		}
+			//printf("%c %d %d\n",gomoku[i][j],i,j);
+        }
 	}
 	for(i=0;i<N;i++)
-		gomoku[0][i]=gomoku[i][0]=(i+'0');
+		gomoku[0][i]=gomoku[i][0]=(i+'a');
 	
 }
 int checkFive1(int x,int y,char gomoku[N][N]);
 int main(){
-	int msg[2];
+	int msg[3];
 	char gomoku[N][N];
 	SA client_addr;
 	int fd_socket,fd_client;
@@ -47,7 +47,12 @@ int main(){
 	while(1){
 		printf("请等待client下棋\n");
 		my_recv(&recvlen,fd_client,msg,1024);
-		gomoku[msg[0]][msg[1]]='0';
+		if (msg[2] == -1){
+            printf("client win");
+            my_close(fd_socket);
+            break;
+        }
+        gomoku[msg[0]][msg[1]]='0';
 		gomoku_show(gomoku);
 		//server下棋
 loop:
@@ -63,14 +68,19 @@ loop:
 		}
 		gomoku[x][y]='*';
 		gomoku_show(gomoku);
-		if(checkWin(x,y,gomoku,'*')){
-			printf("server win 1\n");
-			break;
-		}
+        
 		msg[0]=x;
 		msg[1]=y;
+        msg[2]=0;
+		if(checkWin(x,y,gomoku,'*')){
+			printf("server win\n");
+            msg[2] = -2;
+            my_send(&sendlen,fd_client,msg,recvlen);
+			my_close(fd_socket);
+            break;
+		}
 		my_send(&sendlen,fd_client,msg,recvlen);
-	}
+    }
 	my_close(fd_socket);
 	my_close(fd_client);
 }

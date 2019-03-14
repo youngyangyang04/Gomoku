@@ -10,7 +10,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define N 10
+#define N 26
 typedef struct tag{
 		int x,y,xl,yl;
 }node;
